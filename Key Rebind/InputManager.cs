@@ -130,6 +130,8 @@ public class InputManager : MonoBehaviour
         }
         else
             action.RemoveBindingOverride(bindingIndex);
+
+        SaveBindingOverride(action);
     }
 
 }
