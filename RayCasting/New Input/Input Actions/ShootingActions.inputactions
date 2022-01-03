@@ -1,0 +1,33 @@
+{
+    "name": "ShootingActions",
+    "maps": [
+        {
+            "name": "Player",
+            "id": "6bc38512-b475-4fda-9525-bee3a25715e5",
+            "actions": [
+                {
+                    "name": "Shoot",
+                    "type": "Button",
+                    "id": "04545333-2b70-4d42-a910-6963b8f9a799",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "72b8afe9-d272-4a2b-a3d3-c1449235d5f2",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
