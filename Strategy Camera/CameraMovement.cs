@@ -24,7 +24,7 @@
         private float stepSize = 2f;
         [BoxGroup("Vertical Translation")]
         [SerializeField]
-        private float elevateDamping = 7.5f;
+        private float zoomDampening = 7.5f;
         [BoxGroup("Vertical Translation")]
         [SerializeField]
         private float minHeight = 5f;
@@ -48,6 +48,8 @@
         //used to update the position of the camera base object.
         private Vector3 targetPosition;
 
+        private float zoomHeight;
+
         //used to track and maintain velocity w/o a rigidbody
         private Vector3 horizontalVelocity;
         private Vector3 lastPosition;
@@ -63,20 +65,21 @@
 
         private void OnEnable()
         {
+            zoomHeight = cameraTransform.localPosition.y;
             cameraTransform.LookAt(this.transform);
 
             lastPosition = this.transform.position;
 
             movement = cameraActions.Camera.MoveCamera;
             cameraActions.Camera.RotateCamera.performed += RotateCamera;
-            cameraActions.Camera.EvalateCamera.performed += ElevateCamera;
+            cameraActions.Camera.ZoomCamera.performed += ZoomCamera;
             cameraActions.Camera.Enable();
         }
 
         private void OnDisable()
         {
             cameraActions.Camera.RotateCamera.performed -= RotateCamera;
-            cameraActions.Camera.EvalateCamera.performed -= ElevateCamera;
+            cameraActions.Camera.ZoomCamera.performed -= ZoomCamera;
             cameraActions.Camera.Disable();
         }
 
@@ -90,6 +93,7 @@
             //move base and camera objects
             UpdateVelocity();
             UpdateBasePosition();
+            UpdateCameraPosition();
         }
 
         private void UpdateVelocity()
@@ -168,28 +172,32 @@
             targetPosition = Vector3.zero;
         }
 
-        private void ElevateCamera(InputAction.CallbackContext obj)
+        private void ZoomCamera(InputAction.CallbackContext obj)
         {
             float inputValue = -obj.ReadValue<Vector2>().y / 100f;
-            float targetHeight = cameraTransform.position.y + inputValue * stepSize;
 
             if (Mathf.Abs(inputValue) > 0.1f)
             {
-                if (targetHeight < minHeight)
-                    targetHeight = minHeight;
-                else if (targetHeight > maxHeight)
-                    targetHeight = maxHeight;
+                zoomHeight = cameraTransform.localPosition.y + inputValue * stepSize;
+
+                if (zoomHeight < minHeight)
+                    zoomHeight = minHeight;
+                else if (zoomHeight > maxHeight)
+                    zoomHeight = maxHeight;
             }
-
-            //set height target
-            Vector3 targetLocation = new Vector3(cameraTransform.position.x, targetHeight, cameraTransform.position.z);
-            //add vector for forward/backward zoom
-            targetLocation -= zoomSpeed * (targetHeight - cameraTransform.position.y) * cameraTransform.forward;
-
-            cameraTransform.position = Vector3.Lerp(cameraTransform.position, targetLocation, Time.deltaTime * elevateDamping);
-            cameraTransform.LookAt(this.transform);
         }
 
+        private void UpdateCameraPosition()
+        {
+            //set zoom target
+             Vector3 zoomTarget = new Vector3(cameraTransform.localPosition.x, zoomHeight, cameraTransform.localPosition.z);
+            //add vector for forward/backward zoom
+            zoomTarget -= zoomSpeed * (zoomHeight - cameraTransform.localPosition.y) * Vector3.forward;
+
+            cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, zoomTarget, Time.deltaTime * zoomDampening);
+            cameraTransform.LookAt(this.transform);
+        }
+     
         private void RotateCamera(InputAction.CallbackContext obj)
         {
             if (!Mouse.current.middleButton.isPressed)
@@ -197,7 +205,6 @@
 
             float inputValue = obj.ReadValue<Vector2>().x;
             transform.rotation = Quaternion.Euler(0f, inputValue * maxRotationSpeed + transform.rotation.eulerAngles.y, 0f);
-
         }
 
         //gets the horizontal forward vector of the camera

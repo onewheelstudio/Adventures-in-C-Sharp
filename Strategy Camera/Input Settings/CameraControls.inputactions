@@ -24,7 +24,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "EvalateCamera",
+                    "name": "ZoomCamera",
                     "type": "Value",
                     "id": "dfa2b003-eab0-4464-a8cb-ed851235761f",
                     "expectedControlType": "Vector2",
@@ -151,7 +151,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
-                    "action": "EvalateCamera",
+                    "action": "ZoomCamera",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
