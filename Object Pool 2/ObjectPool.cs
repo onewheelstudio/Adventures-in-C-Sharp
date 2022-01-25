@@ -109,7 +109,7 @@ public class ObjectPool<T> : IPool<T> where T : Component, IPoolable<T>
 public interface IPool<T>
 {
     T Pull();
-    void Push(T gameObject);
+    void Push(T t);
 }
 
 public interface IPoolable<T>
