@@ -1,8 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectPool<T> : IPool<T> where T : Component, IPoolable<T>
+public class ObjectPool<T> : IPool<T> where T : MonoBehaviour, IPoolable<T>
 {
     public ObjectPool(GameObject pooledObject, int numToSpawn = 0)
     {
@@ -41,8 +40,7 @@ public class ObjectPool<T> : IPool<T> where T : Component, IPoolable<T>
         t.Initialize(Push);
 
         //allow default behavior and turning object back on
-        if (pullObject != null)
-            pullObject.Invoke(t);
+        pullObject?.Invoke(t);
 
         return t;
     }
@@ -87,8 +85,7 @@ public class ObjectPool<T> : IPool<T> where T : Component, IPoolable<T>
         pooledObjects.Push(t);
 
         //create default behavior to turn off objects
-        if (pushObject != null)
-            pushObject.Invoke(t);
+        pushObject?.Invoke(t);
 
         t.gameObject.SetActive(false);
     }
