@@ -1,25 +1,28 @@
 ﻿using System;
 using UnityEngine;
 
-public class PoolObject : MonoBehaviour, IPoolable<PoolObject>
+namespace OWS.ObjectPooling
 {
-    private Action<PoolObject> returnToPool;
-
-    private void OnDisable()
+    public class PoolObject : MonoBehaviour, IPoolable<PoolObject>
     {
-        ReturnToPool();
-    }
+        private Action<PoolObject> returnToPool;
 
-    public void Initialize(Action<PoolObject> returnAction)
-    {
-        //cache reference to return action
-        this.returnToPool = returnAction;
-    }
+        private void OnDisable()
+        {
+            ReturnToPool();
+        }
 
-    public void ReturnToPool()
-    {
-        //invoke and return this object to pool
-        returnToPool?.Invoke(this);
+        public void Initialize(Action<PoolObject> returnAction)
+        {
+            //cache reference to return action
+            this.returnToPool = returnAction;
+        }
+
+        public void ReturnToPool()
+        {
+            //invoke and return this object to pool
+            returnToPool?.Invoke(this);
+        }
     }
 }
 
