@@ -17,6 +17,7 @@ namespace OWS.ObjectPooling
             this.prefab = pooledObject;
             this.pullObject = pullObject;
             this.pushObject = pushObject;
+            Spawn(numToSpawn);
         }
 
         private System.Action<T> pullObject;
